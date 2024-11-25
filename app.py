@@ -11,6 +11,7 @@ app.secret_key = os.getenv("SECRET_KEY")
 
 @app.route('/')
 def assist():
+    session.permanent = False
     thread = Thread()
     thread.retrieve_thread()
     return f"Current Thread ID: {session.get('thread_id', 'No Thread Found')}"
