@@ -17,7 +17,7 @@ def assist():
     thread.retrieve_thread()
     
     #Add Message to Thread
-    thread.add_message_to_thread("user", "Hi")
+    thread.add_message_to_thread(role="user", content="Hi")
     thread.list_messages()
     
     return f"Current Thread ID: {session.get('thread_id', 'No Thread Found')}"
