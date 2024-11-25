@@ -23,3 +23,19 @@ class Thread:
         session['thread_id'] = thread_entity.id
         self.thread = thread_entity
         print(f"New Thread Created: {self.thread}")
+    
+    def add_message_to_thread(self, role, content):
+        if self.thread:
+            try:
+                message = self.client.beta.threads.messages.create(thread_id=self.thread.id, role=role, content=content)
+                print(f"Message Added: {message}")
+            except Exception as e:
+                print(f"Add Message Failed: {e}")
+    
+    # Helper function for validation        
+    def list_messages(self):
+        messages = self.client.beta.threads.messages.list(self.thread.id)
+        for message in messages:
+            print(f"{message.role}:")
+            for content in message.content:
+                print(f"{content.text.value}")
