@@ -35,5 +35,6 @@ class Thread:
     def list_messages(self):
         messages = self.client.beta.threads.messages.list(self.thread.id)
         for message in messages:
+            print(f"{message.role}:")
             for content in message.content:
-                print(f"Message: {content.text.value}")
+                print(f"{content.text.value}")
