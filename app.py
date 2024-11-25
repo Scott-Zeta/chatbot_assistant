@@ -12,8 +12,14 @@ app.secret_key = os.getenv("SECRET_KEY")
 @app.route('/')
 def assist():
     session.permanent = False
+    # Create or Retrieve Thread
     thread = Thread()
     thread.retrieve_thread()
+    
+    #Add Message to Thread
+    thread.add_message_to_thread("user", "Hi")
+    thread.list_messages()
+    
     return f"Current Thread ID: {session.get('thread_id', 'No Thread Found')}"
 
 if __name__ == '__main__':
