@@ -15,7 +15,7 @@ class Assistant:
         
         print("Assistant ID: ", Assistant.assistant_id)
         if Assistant.assistant_id:
-            self.assistant = self.client.beta.assistants.retrieve(Assistant.assistant_id)
+            self.assistant = self.client.beta.assistants.retrieve(assistant_id=Assistant.assistant_id)
         else:
             self.create_assistant(name="NDIS Assistant",
                                 instructions="You are an assistant for the National Disability Insurance Scheme (NDIS). You are helping a participant understand the NDIS plan and how to use it.",

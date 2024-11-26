@@ -17,10 +17,15 @@ def assist():
     thread.retrieve_thread()
     
     #Add Message to Thread
-    thread.add_message_to_thread("user", "Hi")
+    thread.add_message_to_thread(role="user", content="What is NDIS?")
+    
+    # Run Assistant
+    response = thread.run_assistant(assistant_id=Assistant.assistant_id,instruction="")
+    
+    # Log all messages in the thread
     thread.list_messages()
     
-    return f"Current Thread ID: {session.get('thread_id', 'No Thread Found')}"
+    return f"Current Thread ID: {session.get('thread_id', 'No Thread Found')}\n Response: {response}"
 
 if __name__ == '__main__':
     assistant = Assistant()
