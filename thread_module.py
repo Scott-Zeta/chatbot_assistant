@@ -39,3 +39,25 @@ class Thread:
             print(f"{message.role}:")
             for content in message.content:
                 print(f"{content.text.value}")
+                
+    def run_assistant(self,assistant_id, instruction):
+        if self.thread:
+            run = self.client.beta.threads.runs.create_and_poll(
+                thread_id=self.thread.id,
+                assistant_id=assistant_id,
+                )
+            
+            if run.status == 'completed':
+                messages = self.client.beta.threads.messages.list(
+                    thread_id=self.thread.id
+                )
+                summary = []
+
+                last_message = messages.data[0]
+                # print(f"last_message: {last_message}")
+                response = last_message.content[0].text.value
+                summary.append(response)
+
+                return "\n".join(summary)
+            else:
+                print(run.status)
