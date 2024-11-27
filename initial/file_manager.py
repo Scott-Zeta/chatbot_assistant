@@ -21,4 +21,9 @@ if vs_id:
         print(file.id)
 else:
     # Create Vector Storage
-    pass
+    new_vector_store_name = os.getenv("VECTOR_STORAGE_NAME") or "New Vector Store"
+    vector_store = client.beta.vector_stores.create(name=new_vector_store_name)
+    vs_id = vector_store.id
+    print("====New Vector Store Created====")
+    print(f"ID: {vector_store.id}")
+    print(f"Name: {vector_store.name}")
