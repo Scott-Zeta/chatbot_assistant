@@ -8,6 +8,7 @@ load_dotenv()
 client = OpenAI()
 
 vs_id = os.getenv("VECTOR_STORAGE_ID")
+assistant_id = os.getenv("ASSISTANT_ID")
 
 def upload_file_to_vector_store(vs_id, file_streams):
     file_batch = client.beta.vector_stores.file_batches.upload_and_poll(
@@ -52,4 +53,12 @@ if vector_store.id:
     upload_file_to_vector_store(vector_store.id, file_streams)
 else:
     print("Vector Store Not Found")
-  
+
+# Attach Vector Storage to Assistant
+if assistant_id and vector_store.id:
+    assistant = client.beta.assistants.update(
+  assistant_id=assistant_id,
+  tool_resources={"file_search": {"vector_store_ids": [vector_store.id]}},
+)
+else:
+    print("Assistant Not Found")
