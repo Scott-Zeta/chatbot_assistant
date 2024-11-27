@@ -14,9 +14,11 @@ if vs_id:
     vector_store = client.beta.vector_stores.retrieve(vector_store_id=vs_id)
     vector_store_files = client.beta.vector_stores.files.list(vector_store_id =vs_id)
     print("====Vector Store Retrieved====")
-    print(vector_store)
+    print(f"ID: {vector_store.id}")
+    print(f"Total file number: {vector_store.file_counts.total}")
     print("====Vector Store Files====")
-    print(vector_store_files)
+    for file in vector_store_files.data:
+        print(file.id)
 else:
     # Create Vector Storage
     pass
