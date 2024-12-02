@@ -1,4 +1,5 @@
 import openai
+import time
 import json
 from flask import session
 from functions.functions import get_weather
@@ -48,42 +49,44 @@ class Thread:
                 thread_id=self.thread.id,
                 assistant_id=assistant_id,
                 )
-            if run.status == 'completed':
-                messages = self.client.beta.threads.messages.list(
-                    thread_id=self.thread.id
-                )
-                summary = []
+            while True:
+                if run.status == 'completed':
+                    messages = self.client.beta.threads.messages.list(
+                        thread_id=self.thread.id
+                    )
+                    summary = []
 
-                last_message = messages.data[0]
-                # print(f"last_message: {last_message}")
-                response = last_message.content[0].text.value
-                summary.append(response)
+                    last_message = messages.data[0]
+                    # print(f"last_message: {last_message}")
+                    response = last_message.content[0].text.value
+                    summary.append(response)
 
-                return "\n".join(summary)
-            elif run.status == 'requires_action':
-                print("Action Required")
-                tool_outputs = [] # Output from tools
-                
-                for tool in run.required_action.submit_tool_outputs.tool_calls:
-                    arguments = json.loads(tool.function.arguments) # arguments array for tools
-                    if tool.function.name == "get_weather":
-                        output = get_weather(city=arguments['city'])
-                        print(f"Output Data: {output}")
-                        tool_outputs.append({"tool_call_id": tool.id, "output": output})
+                    return "\n".join(summary)
+                elif run.status == 'requires_action':
+                    print("Action Required")
+                    tool_outputs = [] # Output from tools
+                    
+                    for tool in run.required_action.submit_tool_outputs.tool_calls:
+                        arguments = json.loads(tool.function.arguments) # arguments array for tools
+                        if tool.function.name == "get_weather":
+                            output = get_weather(city=arguments['city'])
+                            print(f"Output Data: {output}")
+                            tool_outputs.append({"tool_call_id": tool.id, "output": output})
+                        else:
+                            raise ValueError(f"Unknown function: {tool.function.name}")
+                    
+                    if tool_outputs:
+                        try: 
+                            run = self.client.beta.threads.runs.submit_tool_outputs_and_poll(
+                                thread_id=self.thread.id,
+                                run_id=run.id,
+                                tool_outputs=tool_outputs
+                            )
+                            print(f"Tool Outputs Submitted")
+                        except Exception as e:
+                            print(f"Submit Tool Outputs Failed: {e}")
                     else:
-                        raise ValueError(f"Unknown function: {tool.function.name}")
-                
-                if tool_outputs:
-                    try: 
-                        run = self.client.beta.threads.runs.submit_tool_outputs_and_poll(
-                            thread_id=self.thread.id,
-                            run_id=run.id,
-                            tool_outputs=tool_outputs
-                        )
-                        print(f"Tool Outputs Submitted")
-                    except Exception as e:
-                        print(f"Submit Tool Outputs Failed: {e}")
+                        print("No outputs to submit")
                 else:
-                    print("No outputs to submit")
-            else:
-                print(run.status)
+                    print(run.status)
+                time.sleep(2)
