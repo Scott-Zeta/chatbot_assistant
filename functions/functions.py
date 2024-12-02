@@ -16,8 +16,8 @@ def get_weather(city):
         response = requests.get(url, params=params)
         response.raise_for_status() 
         data = response.json()['data'][0]
-        weather = {'description': data['weather']['description'], 'temperature': data['app_temp']}
-        return f"The weather is {weather['description']} and {weather['temperature']}°C" 
+        weather = {'description': data['weather']['description'], 'temperature':data['temp'], 'feels temperature': data['app_temp']}
+        return f"The weather is {weather['description']}, temperature is {weather['temperature']} and feels like {weather['feels temperature']}°C" 
     except requests.RequestException as e:
         print(f"Error fetching weather data: {e}")
         return None
