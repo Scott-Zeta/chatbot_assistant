@@ -66,12 +66,12 @@ class Thread:
                     print("Action Required")
                     tool_outputs = [] # Output from tools
                     
-                    for tool in run.required_action.submit_tool_outputs.tool_calls:
+                    for tool in run.required_action.submit_tool_outputs.tool_calls: # iterate over all tools has been called
                         arguments = json.loads(tool.function.arguments) # arguments array for tools
                         if tool.function.name == "get_weather":
                             output = get_weather(city=arguments['city'])
                             print(f"Output Data: {output}")
-                            tool_outputs.append({"tool_call_id": tool.id, "output": output})
+                            tool_outputs.append({"tool_call_id": tool.id, "output": output}) # append output from function to tool_outputs
                         else:
                             raise ValueError(f"Unknown function: {tool.function.name}")
                     
@@ -81,7 +81,7 @@ class Thread:
                                 thread_id=self.thread.id,
                                 run_id=run.id,
                                 tool_outputs=tool_outputs
-                            )
+                            ) # Submit tool outputs and poll the run result
                             print(f"Tool Outputs Submitted")
                         except Exception as e:
                             print(f"Submit Tool Outputs Failed: {e}")
