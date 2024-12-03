@@ -17,6 +17,7 @@ body {
 }
 
 .chatbot-popup {
+  position: relative;
   width: 420px;
   background: #fff;
   overflow: hidden;
@@ -25,6 +26,7 @@ body {
     0 32px 64px -48px rgba(0, 0, 0, 0.5);
 }
 
+/* Chat Header */
 .chat-header {
   display: flex;
   align-items: center;
@@ -73,6 +75,7 @@ body {
   background: #2f2b8c;
 }
 
+/* Chat Body */
 .chat-body {
   padding: 25px 22px;
   display: flex;
@@ -169,4 +172,13 @@ body {
   44% {
     opacity: 0.2;
   }
+}
+
+/* Chat Footer */
+.chat-footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: #fff;
+  padding: 15px 22px 20px;
 }
