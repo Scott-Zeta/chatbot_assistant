@@ -2,12 +2,16 @@ import os
 from assistant_module import Assistant
 from dotenv import load_dotenv
 from thread_module import Thread
-from flask import Flask, session, request, jsonify
+from flask import Flask, session, request, jsonify,render_template
 
 load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
+
+@app.route('/')
+def chat_widget():
+    return render_template('bot_widget.html')
 
 @app.route('/assist', methods=["POST"])
 def assist():
