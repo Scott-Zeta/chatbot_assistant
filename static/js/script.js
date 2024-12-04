@@ -2,8 +2,29 @@ const chatBody = document.querySelector('.chat-body');
 const messageInput = document.querySelector('.message-input');
 const sendMessageButton = document.querySelector('#send-message');
 
+const API_URL = `http://127.0.0.1:5000/assist`;
+
 const userData = {
   message: null,
+};
+
+// Generate bot response using API
+const generateBotResponse = async () => {
+  const requestOptions = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      query: userData.message,
+    }),
+  };
+  try {
+    const response = await fetch(API_URL, requestOptions);
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error.message);
+    console.log(data);
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 // Create message element with dynamic classes and return it
@@ -56,6 +77,7 @@ const handleOutgoingMessage = (e) => {
       'thinking'
     );
     chatBody.appendChild(incomingMessageDiv);
+    generateBotResponse();
   }, 600);
 };
 
