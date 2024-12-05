@@ -1,6 +1,7 @@
 const chatBody = document.querySelector('.chat-body');
 const messageInput = document.querySelector('.message-input');
 const sendMessageButton = document.querySelector('#send-message');
+const chatbotToggler = document.querySelector('#chatbot-toggler');
 
 const API_URL = `http://127.0.0.1:5000/assist`;
 
@@ -105,3 +106,6 @@ messageInput.addEventListener('keydown', (e) => {
 });
 
 sendMessageButton.addEventListener('click', (e) => handleOutgoingMessage(e));
+chatbotToggler.addEventListener('click', () => {
+  document.body.classList.toggle('show-chatbot');
+});
