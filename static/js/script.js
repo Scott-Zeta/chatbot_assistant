@@ -33,6 +33,7 @@ const generateBotResponse = async (incomingMessageDiv) => {
     console.log(error);
   } finally {
     incomingMessageDiv.classList.remove('thinking');
+    chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: 'smooth' });
   }
 };
 
@@ -59,6 +60,7 @@ const handleOutgoingMessage = (e) => {
   outgoingMessageDiv.querySelector('.message-text').innerText =
     userData.message;
   chatBody.appendChild(outgoingMessageDiv);
+  chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: 'smooth' });
 
   // Render thinking animation after delay
   setTimeout(() => {
@@ -86,6 +88,8 @@ const handleOutgoingMessage = (e) => {
       'thinking'
     );
     chatBody.appendChild(incomingMessageDiv);
+    chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: 'smooth' });
+    // Call API to get response and update message element
     generateBotResponse(incomingMessageDiv);
   }, 600);
 };
