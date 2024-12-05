@@ -9,7 +9,11 @@ const userData = {
 };
 
 // Generate bot response using API
-const generateBotResponse = async () => {
+const generateBotResponse = async (incomingMessageDiv) => {
+  // Select message element to update response
+  const messageElement = incomingMessageDiv.querySelector('.message-text');
+
+  // Call Backend API to get response
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -21,9 +25,14 @@ const generateBotResponse = async () => {
     const response = await fetch(API_URL, requestOptions);
     const data = await response.json();
     if (!response.ok) throw new Error(data.error.message);
-    console.log(data);
+    const apiResponseText = data.response.trim();
+
+    // Substitute thinking indicator with response text
+    messageElement.innerText = apiResponseText;
   } catch (error) {
     console.log(error);
+  } finally {
+    incomingMessageDiv.classList.remove('thinking');
   }
 };
 
@@ -77,7 +86,7 @@ const handleOutgoingMessage = (e) => {
       'thinking'
     );
     chatBody.appendChild(incomingMessageDiv);
-    generateBotResponse();
+    generateBotResponse(incomingMessageDiv);
   }, 600);
 };
 
