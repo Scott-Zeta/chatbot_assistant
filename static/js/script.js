@@ -31,6 +31,8 @@ const generateBotResponse = async (incomingMessageDiv) => {
     messageElement.innerText = apiResponseText;
   } catch (error) {
     console.log(error);
+    messageElement.innerText = error.message;
+    messageElement.style.color = 'red';
   } finally {
     incomingMessageDiv.classList.remove('thinking');
     chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: 'smooth' });
