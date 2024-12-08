@@ -245,6 +245,7 @@ body.show-chatbot .chatbot-popup {
   height: 47px;
   width: 100%;
   resize: none;
+  max-height: 150px;
   font-size: 0.95rem;
   padding: 14px 0 13px 18px;
   border-radius: inherit;

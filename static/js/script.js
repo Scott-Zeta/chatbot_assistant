@@ -10,6 +10,8 @@ const userData = {
   message: null,
 };
 
+const initialInputHeight = messageInput.scrollHeight;
+
 // Generate bot response using API
 const generateBotResponse = async (incomingMessageDiv) => {
   // Select message element to update response
@@ -53,7 +55,10 @@ const createMessageElement = (content, ...classes) => {
 const handleOutgoingMessage = (e) => {
   e.preventDefault();
   userData.message = messageInput.value.trim();
+  // Clear input field and reset height
   messageInput.value = '';
+  messageInput.dispatchEvent(new Event('input'));
+  // messageInput.style.height = `${initialInputHeight}px`;
 
   //Create user message element
   const messageContent = `<div class="message-text"></div>`;
@@ -104,6 +109,11 @@ messageInput.addEventListener('keydown', (e) => {
   if (e.key === 'Enter' && userMessage) {
     handleOutgoingMessage(e);
   }
+});
+
+messageInput.addEventListener('input', (e) => {
+  messageInput.style.height = `${initialInputHeight}px`;
+  messageInput.style.height = `${messageInput.scrollHeight}px`;
 });
 
 sendMessageButton.addEventListener('click', (e) => handleOutgoingMessage(e));
