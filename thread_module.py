@@ -31,7 +31,7 @@ class Thread:
         if self.thread:
             try:
                 message = self.client.beta.threads.messages.create(thread_id=self.thread.id, role=role, content=content)
-                print(f"Message Added: {message}")
+                # print(f"Message Added: {message}")
             except Exception as e:
                 print(f"Add Message Failed: {e}")
     
