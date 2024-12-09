@@ -112,7 +112,17 @@ const loadChatHistory = async () => {
 
     const { history } = data;
     if (history && history.length) {
-      console.log('Chat history loaded:', history);
+      history.reverse();
+      history.forEach((message) => {
+        const messageContent = `<div class="message-text"></div>`;
+        const messageDiv = createMessageElement(
+          messageContent,
+          message.role === 'user' ? 'user-message' : 'bot-message'
+        );
+        messageDiv.querySelector('.message-text').innerText = message.content;
+        chatBody.appendChild(messageDiv);
+      });
+      chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: 'smooth' });
     }
   } catch (error) {
     console.error('Error loading chat history:', error.message);
