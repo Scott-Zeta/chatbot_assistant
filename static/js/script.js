@@ -149,6 +149,4 @@ chatbotToggler.addEventListener('click', () => {
 closeChatbot.addEventListener('click', () => {
   document.body.classList.remove('show-chatbot');
 });
-document.addEventListener('DOMContentLoaded', () => {
-  loadChatHistory();
-});
+loadChatHistory();
