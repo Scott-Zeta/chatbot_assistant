@@ -5,6 +5,7 @@ const chatbotToggler = document.querySelector('#chatbot-toggler');
 const closeChatbot = document.querySelector('#close-chatbot');
 
 const API_URL = `http://127.0.0.1:5000/assist`;
+const HISTORY_API_URL = `http://127.0.0.1:5000/history`;
 
 const userData = {
   message: null,
@@ -103,6 +104,31 @@ const handleOutgoingMessage = (e) => {
   }, 600);
 };
 
+const loadChatHistory = async () => {
+  try {
+    const response = await fetch(HISTORY_API_URL);
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error.message);
+
+    const { history } = data;
+    if (history && history.length) {
+      history.reverse();
+      history.forEach((message) => {
+        const messageContent = `<div class="message-text"></div>`;
+        const messageDiv = createMessageElement(
+          messageContent,
+          message.role === 'user' ? 'user-message' : 'bot-message'
+        );
+        messageDiv.querySelector('.message-text').innerText = message.content;
+        chatBody.appendChild(messageDiv);
+      });
+      chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: 'smooth' });
+    }
+  } catch (error) {
+    console.error('Error loading chat history:', error.message);
+  }
+};
+
 // Handle Enter key press for sending messages
 messageInput.addEventListener('keydown', (e) => {
   const userMessage = e.target.value.trim();
@@ -122,4 +148,7 @@ chatbotToggler.addEventListener('click', () => {
 });
 closeChatbot.addEventListener('click', () => {
   document.body.classList.remove('show-chatbot');
+});
+document.addEventListener('DOMContentLoaded', () => {
+  loadChatHistory();
 });

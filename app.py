@@ -28,10 +28,17 @@ def assist():
     # Run Assistant
     response = thread.run_assistant(assistant_id=Assistant.assistant_id,instruction="")
     
-    # Log all messages in the thread
-    thread.list_messages()
-    
     return jsonify({'response': response})
+
+@app.route('/history', methods=["GET"])
+def history():
+    session.permanent = False
+    # Create or Retrieve Thread
+    thread = Thread()
+    thread.retrieve_thread()
+    # Retrieve Messages History
+    history = thread.list_messages()
+    return jsonify({'history': history})
 
 if __name__ == '__main__':
     assistant = Assistant()
