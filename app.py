@@ -36,8 +36,9 @@ def history():
     # Create or Retrieve Thread
     thread = Thread()
     thread.retrieve_thread()
-    thread.list_messages()
-    return "History"
+    # Retrieve Messages History
+    history = thread.list_messages()
+    return jsonify({'history': history})
 
 if __name__ == '__main__':
     assistant = Assistant()

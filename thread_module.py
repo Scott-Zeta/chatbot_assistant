@@ -38,10 +38,14 @@ class Thread:
     # Helper function for validation        
     def list_messages(self):
         messages = self.client.beta.threads.messages.list(self.thread.id)
+        history = []
         for message in messages:
-            print(f"{message.role}:")
-            for content in message.content:
-                print(f"{content.text.value}")
+            message_dic = {
+                "role": message.role,
+                "content": message.content[0].text.value
+            }
+            history.append(message_dic)
+        return history
                 
     def run_assistant(self,assistant_id, instruction):
         if self.thread:
