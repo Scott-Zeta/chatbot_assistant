@@ -9,7 +9,12 @@ load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
-cors = CORS(app, resources={r"/*": {"origins": "*"}})
+cors = CORS(app, supports_credentials=True, resources={r"/*": {"origins": "*"}})
+
+app.config.update(
+  SESSION_COOKIE_SAMESITE="None",
+  SESSION_COOKIE_SECURE=True
+)
 
 @app.route('/')
 def chat_widget():

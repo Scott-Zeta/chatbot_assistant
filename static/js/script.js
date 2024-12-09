@@ -21,6 +21,7 @@ const generateBotResponse = async (incomingMessageDiv) => {
   // Call Backend API to get response
   const requestOptions = {
     method: 'POST',
+    credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       query: userData.message,
@@ -106,7 +107,7 @@ const handleOutgoingMessage = (e) => {
 
 const loadChatHistory = async () => {
   try {
-    const response = await fetch(HISTORY_API_URL);
+    const response = await fetch(HISTORY_API_URL, { credentials: 'include' });
     const data = await response.json();
     if (!response.ok) throw new Error(data.error.message);
 
