@@ -171,6 +171,8 @@ body.show-chatbot .chatbot-popup {
 }
 
 .chat-body .user-message .message-text {
+  white-space: normal;
+  overflow-wrap: break-word;
   color: #fff;
   background: #5350c4;
   border-radius: 13px 13px 3px 13px;
