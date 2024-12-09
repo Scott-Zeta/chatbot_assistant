@@ -3,11 +3,13 @@ from assistant_module import Assistant
 from dotenv import load_dotenv
 from thread_module import Thread
 from flask import Flask, session, request, jsonify,render_template
+from flask_cors import CORS
 
 load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
+cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
 @app.route('/')
 def chat_widget():
