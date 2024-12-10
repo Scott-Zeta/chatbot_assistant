@@ -184,6 +184,29 @@ body.show-chatbot .chatbot-popup {
   padding-block: 15px;
 }
 
+.chat-body .message .prompt-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.chat-body .message .prompt-group .prompt {
+  display: inline-block;
+  padding: 10px;
+  border: 2px solid #007bff;
+  border-radius: 50px;
+  background-color: #fff;
+  color: #007bff;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.chat-body .message .prompt-group .prompt:hover {
+  background-color: #007bff;
+  color: #fff;
+}
+
 .chat-body .bot-message .thinking-indicator .dot {
   height: 7px;
   width: 7px;
