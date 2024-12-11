@@ -11,6 +11,7 @@ app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
 cors = CORS(app, supports_credentials=True, resources={r"/*": {"origins": "*"}})
 
+# Allow session cookie to be sent cross-domain
 app.config.update(
   SESSION_COOKIE_SAMESITE="None",
   SESSION_COOKIE_SECURE=True
