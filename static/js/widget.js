@@ -9,7 +9,7 @@
   const chatbotContainer = document.createElement('div');
   chatbotContainer.id = 'my-chatbot-container';
   chatbotContainer.innerHTML = `
-      <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -64,6 +64,17 @@
           <div class="message-text">
             Hey there 👋 <br />
             How can I help you today?
+          </div>
+        </div>
+        <div class="message user-message">
+          <div class="prompt-group">
+            <button class="prompt">
+              Tell me about NDIS Early Acess Program.
+            </button>
+            <button class="prompt">
+              I have Hearing disability, how to contact NDIS?
+            </button>
+            <button class="prompt">How is the weather in Adelaide?</button>
           </div>
         </div>
       </div>
