@@ -106,10 +106,6 @@ const handleOutgoingMessage = (e) => {
   }, 600);
 };
 
-const handleButtonMessage = (e) => {
-  // Await for implementation
-};
-
 const loadChatHistory = async () => {
   try {
     const response = await fetch(HISTORY_API_URL, { credentials: 'include' });
