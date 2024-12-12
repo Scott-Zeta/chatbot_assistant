@@ -47,13 +47,17 @@ class Thread:
             history.append(message_dic)
         return history
                 
-    def run_assistant(self,assistant_id, instruction):
+    def run_assistant(self,assistant_id, instruction, max_retry=10):
+        retry_count = 0
         if self.thread:
             run = self.client.beta.threads.runs.create_and_poll(
                 thread_id=self.thread.id,
                 assistant_id=assistant_id,
                 )
             while True:
+                if retry_count > max_retry:
+                    raise RuntimeError("Exceeded Failed limit while polling run status.")
+                
                 if run.status == 'completed':
                     messages = self.client.beta.threads.messages.list(
                         thread_id=self.thread.id
@@ -91,6 +95,9 @@ class Thread:
                             print(f"Submit Tool Outputs Failed: {e}")
                     else:
                         print("No outputs to submit")
+                elif run.status == 'failed':
+                    print(run.status)
+                    retry_count += 1
                 else:
                     print(run.status)
                 time.sleep(2)

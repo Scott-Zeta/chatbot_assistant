@@ -8,6 +8,7 @@ const promptButtons = document.querySelectorAll('.prompt-group .prompt');
 const API_URL = `http://127.0.0.1:5000/assist`;
 const HISTORY_API_URL = `http://127.0.0.1:5000/history`;
 
+// Store User Input
 const userData = {
   message: null,
 };
@@ -113,6 +114,7 @@ const loadChatHistory = async () => {
     if (!response.ok) throw new Error(data.error.message);
 
     const { history } = data;
+    // Append chat history to chat body
     if (history && history.length) {
       history.reverse();
       history.forEach((message) => {
@@ -139,20 +141,24 @@ messageInput.addEventListener('keydown', (e) => {
   }
 });
 
+// Auto resize message input field
 messageInput.addEventListener('input', (e) => {
   messageInput.style.height = `${initialInputHeight}px`;
   messageInput.style.height = `${messageInput.scrollHeight}px`;
 });
 
+// Send message on button click
 sendMessageButton.addEventListener('click', (e) => handleOutgoingMessage(e));
+
+// Toggle chatbot visibility
 chatbotToggler.addEventListener('click', () => {
   document.body.classList.toggle('show-chatbot');
 });
-
 closeChatbot.addEventListener('click', () => {
   document.body.classList.remove('show-chatbot');
 });
 
+// Handle prompt button selection
 promptButtons.forEach((button) => {
   button.addEventListener('click', (e) => {
     const question = button.innerText.trim();
