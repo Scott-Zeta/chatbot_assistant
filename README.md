@@ -47,5 +47,5 @@ The Chatbot Assistant is a web-based application that uses OpenAI’s Assistant 
    To integrate the chatbot into another website, add the following script tag to your site’s HTML:
    ```html
    <script src="http://localhost:5000/static/js/widget.js" defer></script>
-   This allows you to include the chatbot widget seamlessly.
    ```
+   This allows you to include the chatbot widget seamlessly.
