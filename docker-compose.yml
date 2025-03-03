@@ -1,0 +1,12 @@
+services:
+  chatbot:
+    build: .
+    container_name: chatbot_container
+    ports:
+      - "127.0.0.1:5000:5000"
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    command: python3 -m flask run --host 0.0.0.0 --port 5000
+    restart: unless-stopped
