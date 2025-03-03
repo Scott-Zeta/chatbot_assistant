@@ -1,0 +1,11 @@
+services:
+  chatbot:
+    build: .
+    container_name: my_chatbot_container
+    ports:
+      - "127.0.0.1:8080:5000"
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    command: python3 app.py
