@@ -17,6 +17,9 @@ app.config.update(
   SESSION_COOKIE_SECURE=True
 )
 
+# Initialize the Assistant globally
+assistant = Assistant()
+
 @app.route('/')
 def chat_widget():
     return render_template('bot_widget.html')
@@ -49,6 +52,4 @@ def history():
     return jsonify({'history': history})
 
 if __name__ == '__main__':
-    assistant = Assistant()
-
     app.run(debug=True)
