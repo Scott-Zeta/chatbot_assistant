@@ -65,8 +65,8 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
       - name: Sync static & template files to S3 with public read access
         run: |
-          aws s3 sync static s3://${{ env.S3_BUCKET_NAME }}/static --delete --acl public-read
-          aws s3 sync templates s3://${{ env.S3_BUCKET_NAME }}/templates --delete --acl public-read
+          aws s3 sync static s3://${{ env.S3_BUCKET_NAME }}/static --delete
+          aws s3 sync templates s3://${{ env.S3_BUCKET_NAME }}/templates --delete
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
