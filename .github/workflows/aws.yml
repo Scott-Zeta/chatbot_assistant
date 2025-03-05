@@ -92,7 +92,7 @@ jobs:
                 {"name": "SECRET_KEY", "value": "${{ secrets.SECRET_KEY }}"},
                 {"name": "VECTOR_STORAGE_ID", "value": "${{ secrets.VECTOR_STORAGE_ID }}"},
                 {"name": "VECTOR_STORAGE_NAME", "value": "${{ secrets.VECTOR_STORAGE_NAME }}"},
-                {"name": "WEATHER_API_KEY", "value": "${{ secrets.WEATHER_API_KEY }}"},
+                {"name": "WEATHER_API_KEY", "value": "${{ secrets.WEATHER_API_KEY }}"}
               ]' $ECS_TASK_DEFINITION > temp-task-definition.json && mv temp-task-definition.json $ECS_TASK_DEFINITION
 
       - name: Fill in the new image ID in the Amazon ECS task definition
