@@ -1,8 +1,16 @@
 (function () {
+  // Detect if running locally or in production
+  const isLocal =
+    window.location.hostname === '127.0.0.1' ||
+    window.location.hostname === 'localhost';
+
+  // Set the base URL dynamically
+  const BASE_URL = isLocal ? 'http://127.0.0.1:5000' : '';
+
   // Load CSS dynamically
   const link = document.createElement('link');
   link.rel = 'stylesheet';
-  link.href = 'http://127.0.0.1:5000/static/css/style.css';
+  link.href = `${BASE_URL}/static/css/style.css`;
   document.head.appendChild(link);
 
   // Create chatbot container
@@ -111,7 +119,7 @@
 
   // Load chatbot logic
   const script = document.createElement('script');
-  script.src = 'http://127.0.0.1:5000/static/js/script.js';
+  script.src = `${BASE_URL}/static/js/script.js`;
   script.defer = true;
   document.body.appendChild(script);
 
