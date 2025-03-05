@@ -41,7 +41,9 @@ env:
   CONTAINER_NAME:
     chatbot_app # set this to the name of the container in the
     # containerDefinitions section of your task definition
-
+  S3_BUCKET_NAME:
+    chatbot-test-assets # set this to the name of the S3 bucket
+    # where your assets are stored
 permissions:
   contents: read
 
@@ -61,7 +63,10 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
-
+      - name: Sync static & template files to S3 with public read access
+        run: |
+          aws s3 sync static s3://${{ env.S3_BUCKET_NAME }}/static --delete --acl public-read
+          aws s3 sync templates s3://${{ env.S3_BUCKET_NAME }}/templates --delete --acl public-read
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
