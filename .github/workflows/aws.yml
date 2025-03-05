@@ -83,6 +83,18 @@ jobs:
       #   run: |
       #     aws ecs describe-task-definition --task-definition chatbot_test --query taskDefinition > .aws/task-definition.json
 
+      - name: Inject API Keys into Task Definition
+        run: |
+          # Overwrite task-definition.json by injecting secrets directly
+          jq '.containerDefinitions[0].environment += [
+                {"name": "OPENAI_API_KEY", "value": "${{ secrets.OPENAI_API_KEY }}"},
+                {"name": "ASSISTANT_ID", "value": "${{ secrets.ASSISTANT_ID }}"},
+                {"name": "SECRET_KEY", "value": "${{ secrets.SECRET_KEY }}"},
+                {"name": "VECTOR_STORAGE_ID", "value": "${{ secrets.VECTOR_STORAGE_ID }}"},
+                {"name": "VECTOR_STORAGE_NAME", "value": "${{ secrets.VECTOR_STORAGE_NAME }}"},
+                {"name": "WEATHER_API_KEY", "value": "${{ secrets.WEATHER_API_KEY }}"},
+              ]' $ECS_TASK_DEFINITION > temp-task-definition.json && mv temp-task-definition.json $ECS_TASK_DEFINITION
+
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
