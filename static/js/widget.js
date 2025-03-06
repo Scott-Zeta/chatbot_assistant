@@ -1,11 +1,6 @@
 (function () {
-  // Detect if running locally or in production
-  const isLocal =
-    window.location.hostname === '127.0.0.1' ||
-    window.location.hostname === 'localhost';
-
   // Set the base URL dynamically
-  const BASE_URL = isLocal ? 'http://127.0.0.1:5000' : '';
+  const BASE_URL = 'https://chatbot-assistant-h8rm.onrender.com';
 
   // Load CSS dynamically
   const link = document.createElement('link');
