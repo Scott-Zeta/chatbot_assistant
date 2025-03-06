@@ -5,8 +5,8 @@ const chatbotToggler = document.querySelector('#chatbot-toggler');
 const closeChatbot = document.querySelector('#close-chatbot');
 const promptButtons = document.querySelectorAll('.prompt-group .prompt');
 
-const API_URL = `/assist`;
-const HISTORY_API_URL = `/history`;
+const API_URL = `https://chatbot-assistant-h8rm.onrender.com/assist`;
+const HISTORY_API_URL = `https://chatbot-assistant-h8rm.onrender.com/history`;
 
 // Store User Input
 const userData = {
