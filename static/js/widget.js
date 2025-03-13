@@ -1,6 +1,6 @@
 (function () {
   // Set the base URL dynamically
-  const BASE_URL = 'http://127.0.0.1:5000'; // Use HTTP unless SSL is configured
+  const BASE_URL = 'https://chatbot-assistant-h8rm.onrender.com'; // Use HTTP unless SSL is configured
 
   // Create chatbot container
   const chatbotContainer = document.createElement('div');
