@@ -11,6 +11,8 @@
     .then((response) => response.text())
     .then((html) => {
       chatbotContainer.innerHTML = html;
+      chatbotContainer.style.zIndex = '9999';
+      chatbotContainer.style.position = 'fixed';
       document.body.appendChild(chatbotContainer);
 
       // Load CSS dynamically
