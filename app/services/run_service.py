@@ -1,7 +1,7 @@
 import json
 import time
 import openai
-from app.utils.weather_utils import get_weather
+from app.functions.weather_utils import get_weather
 
 class RunService:
     def __init__(self, thread_service):
