@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request, render_template
 from app.services.assistant_service import AssistantService
 from app.services.thread_service import ThreadService
 from app.services.run_service import RunService
+from app.utils.rate_limiter import rate_limit
 
 chat_bp = Blueprint('chat', __name__)
 assistant_service = AssistantService()
@@ -13,6 +14,7 @@ def chat_widget():
     return render_template('bot_widget.html')
 
 @chat_bp.route('/assist', methods=["POST"])
+@rate_limit(calls=30, period=3600)
 def assist():
     query = request.json.get('query')
     if not query:
