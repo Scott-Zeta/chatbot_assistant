@@ -3,6 +3,7 @@ from app.services.assistant_service import AssistantService
 from app.services.thread_service import ThreadService
 from app.services.run_service import RunService
 from app.utils.rate_limiter import rate_limit
+from app.utils.validators import MessageSchema, validate_request
 
 chat_bp = Blueprint('chat', __name__)
 assistant_service = AssistantService()
@@ -15,11 +16,9 @@ def chat_widget():
 
 @chat_bp.route('/assist', methods=["POST"])
 @rate_limit(calls=30, period=3600)
+@validate_request(MessageSchema())
 def assist():
-    query = request.json.get('query')
-    if not query:
-        return jsonify({'error': 'No query provided'}), 400
-    
+    query = request.json.get('query')    
     try:
         thread_service.add_message(content=query)
         response = run_service.create_run(
