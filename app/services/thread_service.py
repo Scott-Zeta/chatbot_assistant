@@ -1,8 +1,5 @@
 import openai
-import json
-import time
 from flask import session
-from app.utils.weather_utils import get_weather
 
 class ThreadService:
     def __init__(self):
@@ -59,56 +56,4 @@ class ThreadService:
             ]
         except Exception as e:
             raise RuntimeError(f"Failed to get message history: {str(e)}")
-    
-    def run_assistant(self, assistant_id: str, instruction: str = "", max_retries: int = 10):
-        """Runs the assistant on the current thread"""
-        self.ensure_thread()
-        try:
-            run = self._create_and_handle_run(assistant_id, max_retries)
-            return self._process_run_response(run)
-        except Exception as e:
-            raise RuntimeError(f"Failed to run assistant: {str(e)}")
-    
-    def _create_and_handle_run(self, assistant_id: str, max_retries: int):
-        run = self.client.beta.threads.runs.create_and_poll(
-            thread_id=self.thread.id,
-            assistant_id=assistant_id
-        )
         
-        retry_count = 0
-        while retry_count < max_retries:
-            if run.status == 'completed':
-                return run
-            elif run.status == 'requires_action':
-                run = self._handle_required_actions(run)
-            elif run.status == 'failed':
-                retry_count += 1
-            else:
-                time.sleep(2)
-        
-        raise RuntimeError("Maximum retries exceeded")
-    
-    def _handle_required_actions(self, run):
-        tool_outputs = []
-        for tool in run.required_action.submit_tool_outputs.tool_calls:
-            arguments = json.loads(tool.function.arguments)
-            if tool.function.name == "get_weather":
-                output = get_weather(city=arguments['city'])
-                tool_outputs.append({
-                    "tool_call_id": tool.id,
-                    "output": output
-                })
-            else:
-                raise ValueError(f"Unknown function: {tool.function.name}")
-                
-        return self.client.beta.threads.runs.submit_tool_outputs_and_poll(
-            thread_id=self.thread.id,
-            run_id=run.id,
-            tool_outputs=tool_outputs
-        )
-    
-    def _process_run_response(self, run):
-        messages = self.client.beta.threads.messages.list(
-            thread_id=self.thread.id
-        )
-        return messages.data[0].content[0].text.value

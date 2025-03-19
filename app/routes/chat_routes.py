@@ -1,10 +1,12 @@
 from flask import Blueprint, jsonify, request, render_template
 from app.services.assistant_service import AssistantService
 from app.services.thread_service import ThreadService
+from app.services.run_service import RunService
 
 chat_bp = Blueprint('chat', __name__)
 assistant_service = AssistantService()
 thread_service = ThreadService()
+run_service = RunService(thread_service)
 
 @chat_bp.route('/')
 def chat_widget():
@@ -18,7 +20,7 @@ def assist():
     
     try:
         thread_service.add_message(content=query)
-        response = thread_service.run_assistant(
+        response = run_service.create_run(
             assistant_id=assistant_service.assistant_id
         )
         return jsonify({'response': response})
