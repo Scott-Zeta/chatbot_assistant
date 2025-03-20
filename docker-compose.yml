@@ -1,12 +1,31 @@
 services:
   chatbot:
-    build: .
+    build: 
+      context: .
+      dockerfile: Dockerfile
     container_name: chatbot_container
     ports:
       - "127.0.0.1:5000:5000"
     env_file:
       - .env
     volumes:
-      - .:/app
-    command: python3 -m flask run --host 0.0.0.0 --port 5000
+      - ./app:/chatbot/app
+      - ./config:/chatbot/config
+      - ./static:/chatbot/static
+      - ./templates:/chatbot/templates
+    environment:
+      - FLASK_APP=run.py
+      - FLASK_ENV=development
+      - PYTHONPATH=/app
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
     restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "3"
