@@ -47,6 +47,31 @@ class ChatBot {
       if (!response.ok) throw new Error(data.error.message);
 
       messageElement.innerText = data.response.anwser.trim();
+
+      // append prompt quesiton buttons
+      if (
+        data.response.follow_up_questions &&
+        data.response.follow_up_questions.length > 0
+      ) {
+        const promptMessageDiv = this.createMessageElement('', 'user-message');
+        const promptGroup = document.createElement('div');
+        promptGroup.className = 'prompt-group';
+
+        data.response.follow_up_questions.forEach((question) => {
+          const button = document.createElement('button');
+          button.className = 'prompt';
+          button.innerText = question;
+          button.addEventListener('click', () => {
+            this.messageState.currentMessage = question;
+            this.appendUserMessage(question);
+            this.showBotResponse();
+          });
+          promptGroup.appendChild(button);
+        });
+
+        promptMessageDiv.appendChild(promptGroup);
+        DOM_ELEMENTS.chatBody.appendChild(promptMessageDiv);
+      }
     } catch (error) {
       console.error('API Error:', error);
       messageElement.innerText = error.message;
