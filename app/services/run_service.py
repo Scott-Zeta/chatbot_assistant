@@ -1,7 +1,17 @@
 import json
 import time
+from typing import List
 import openai
+from pydantic import BaseModel
 from app.functions.weather_utils import get_weather
+
+class NDISResponseModel(BaseModel):
+    anwser: str
+    """The response to the user's inquiry about NDIS."""
+
+    follow_up_questions: List[str]
+    """Relevant follow-up questions to guide the user's exploration."""
+
 
 class RunService:
     def __init__(self, thread_service):
@@ -12,7 +22,8 @@ class RunService:
         """Creates and manages a run with the assistant"""
         try:
             run = self._create_and_handle_run(assistant_id, max_retries)
-            return self._process_run_response(run)
+            response = self._process_run_response(run)
+            return json.loads(response)
         except Exception as e:
             raise RuntimeError(f"Failed to run assistant: {str(e)}")
     
@@ -20,6 +31,12 @@ class RunService:
         run = self.client.beta.threads.runs.create_and_poll(
             thread_id=self.thread_service.thread.id,
             assistant_id=assistant_id,
+            response_format={'type': 'json_schema',
+           'json_schema': 
+              {
+                "name":"whocares", 
+                "schema": NDISResponseModel.model_json_schema()
+              }}
         )
         
         retry_count = 0
