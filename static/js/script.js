@@ -43,9 +43,10 @@ class ChatBot {
       });
 
       const data = await response.json();
+      console.log(data);
       if (!response.ok) throw new Error(data.error.message);
 
-      messageElement.innerText = data.response.trim();
+      messageElement.innerText = data.response.anwser.trim();
     } catch (error) {
       console.error('API Error:', error);
       messageElement.innerText = error.message;
