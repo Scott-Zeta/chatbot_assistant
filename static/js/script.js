@@ -151,7 +151,9 @@ class ChatBot {
       button.addEventListener('click', () => {
         this.messageState.currentMessage = question;
         this.appendUserMessage(question);
-        this.showBotResponse();
+        this.showBotResponse().then((incomingMessageDiv) => {
+          this.generateBotResponse(incomingMessageDiv);
+        });
       });
       promptGroup.appendChild(button);
     });
@@ -177,7 +179,9 @@ class ChatBot {
     this.messageState.currentMessage = messageText;
     this.clearInputField();
     this.appendUserMessage(messageText);
-    this.showBotResponse();
+    this.showBotResponse().then((incomingMessageDiv) => {
+      this.generateBotResponse(incomingMessageDiv);
+    });
   }
 
   clearInputField() {
@@ -196,19 +200,21 @@ class ChatBot {
   }
 
   showBotResponse() {
-    setTimeout(() => {
-      const botMessageContent = `${
-        TEMPLATE.BOT_AVATAR_SVG
-      }${this.createThinkingIndicator()}`;
-      const incomingMessageDiv = this.createMessageElement(
-        botMessageContent,
-        'bot-message',
-        'thinking'
-      );
-      DOM_ELEMENTS.chatBody.appendChild(incomingMessageDiv);
-      this.scrollToBottom();
-      this.generateBotResponse(incomingMessageDiv);
-    }, CONFIG.THINKING_DELAY);
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const botMessageContent = `${
+          TEMPLATE.BOT_AVATAR_SVG
+        }${this.createThinkingIndicator()}`;
+        const incomingMessageDiv = this.createMessageElement(
+          botMessageContent,
+          'bot-message',
+          'thinking'
+        );
+        DOM_ELEMENTS.chatBody.appendChild(incomingMessageDiv);
+        this.scrollToBottom();
+        resolve(incomingMessageDiv); // return the message element
+      }, CONFIG.THINKING_DELAY);
+    });
   }
 
   async loadChatHistory() {
@@ -276,7 +282,9 @@ class ChatBot {
       button.addEventListener('click', () => {
         this.messageState.currentMessage = button.innerText.trim();
         this.appendUserMessage(this.messageState.currentMessage);
-        this.showBotResponse();
+        this.showBotResponse().then((incomingMessageDiv) => {
+          this.generateBotResponse(incomingMessageDiv);
+        });
       });
     });
   }
