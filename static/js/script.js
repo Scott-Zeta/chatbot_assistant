@@ -21,6 +21,75 @@ const TEMPLATE = {
   </svg>`,
 };
 
+const ndisFAQs = [
+  {
+    id: 1,
+    topic: 'Introduction to the NDIS',
+    questions: [
+      'What is the NDIS, and how does it work?',
+      'Who is eligible for the NDIS?',
+      'How do I apply for the NDIS?',
+      'What types of support does the NDIS cover?',
+      'What is the difference between the NDIS and other government disability services?',
+    ],
+  },
+  {
+    id: 2,
+    topic: 'Eligibility & Application',
+    questions: [
+      'How do I know if I meet the NDIS eligibility criteria?',
+      'What documents do I need to provide for my application?',
+      'How long does it take to get approved for the NDIS?',
+      'What happens if my application is rejected?',
+      'Can I appeal an NDIS decision if I am found ineligible?',
+    ],
+  },
+  {
+    id: 3,
+    topic: 'NDIS Plans & Funding',
+    questions: [
+      'How is my NDIS funding determined?',
+      'What is the difference between Core, Capacity Building, and Capital Supports?',
+      'How can I use my NDIS funds?',
+      'Can I change my NDIS plan if my needs change?',
+      'What is a plan review, and how do I request one?',
+    ],
+  },
+  {
+    id: 4,
+    topic: 'NDIS Support & Services',
+    questions: [
+      'What kinds of services and supports can I access through the NDIS?',
+      'Can the NDIS help with housing or home modifications?',
+      'Does the NDIS cover assistive technology, such as wheelchairs or communication devices?',
+      'How do I find and choose NDIS service providers?',
+      'Can I use NDIS funding for therapy and counseling?',
+    ],
+  },
+  {
+    id: 5,
+    topic: 'Managing an NDIS Plan',
+    questions: [
+      'What are the different types of NDIS plan management (self-managed, plan-managed, NDIA-managed)?',
+      'How do I track my NDIS funding and spending?',
+      'Can I switch from NDIA-managed to self-managed or plan-managed?',
+      'What happens if I run out of NDIS funds before my plan ends?',
+      'Can I hire my own support workers with NDIS funding?',
+    ],
+  },
+  {
+    id: 6,
+    topic: 'Other NDIS-Related Topics',
+    questions: [
+      'How does the NDIS work with Medicare and private health insurance?',
+      'Can I use NDIS funding for travel and transport?',
+      'What happens to my NDIS plan if I move interstate?',
+      'What should I do if I have a complaint about my NDIS plan or provider?',
+      'How does the NDIS support people with psychosocial disabilities?',
+    ],
+  },
+];
+
 class ChatBot {
   constructor() {
     this.messageState = {
