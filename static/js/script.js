@@ -12,7 +12,7 @@ const CONFIG = {
   BASE_URL: 'http://127.0.0.1:5000',
   API_URL: '/assist',
   HISTORY_API_URL: '/history',
-  THINKING_DELAY: 600,
+  THINKING_DELAY: 1000,
 };
 
 const TEMPLATE = {
@@ -98,6 +98,44 @@ class ChatBot {
     };
     this.initializeEventListeners();
     this.loadChatHistory();
+    this.generateMenuSelections();
+  }
+
+  generateMenuSelections() {
+    this.showBotResponse().then((incomingMessageDiv) => {
+      const messageElement = incomingMessageDiv.querySelector('.message-text');
+      messageElement.innerText =
+        'Which topic would you like to know more about NDIS?';
+      incomingMessageDiv.classList.remove('thinking');
+      const promptMessageDiv = this.createMessageElement('', 'user-message');
+      const promptGroup = document.createElement('div');
+      promptGroup.className = 'prompt-group';
+
+      ndisFAQs.forEach((topic) => {
+        const button = document.createElement('button');
+        button.className = 'prompt';
+        button.innerText = topic.topic;
+        button.addEventListener('click', () => {
+          this.showBotResponse()
+            .then((incomingMessageDiv) => {
+              const messageElement =
+                incomingMessageDiv.querySelector('.message-text');
+              messageElement.innerText =
+                'Here are some common questions about ' +
+                topic.topic +
+                'Please feel free to type your question or select one of the following:';
+              incomingMessageDiv.classList.remove('thinking');
+            })
+            .then(() => {
+              this.createfollowUpQuestions(topic.questions);
+              this.scrollToBottom();
+            });
+        });
+        promptGroup.appendChild(button);
+      });
+      promptMessageDiv.appendChild(promptGroup);
+      DOM_ELEMENTS.chatBody.appendChild(promptMessageDiv);
+    });
   }
 
   async generateBotResponse(incomingMessageDiv) {
