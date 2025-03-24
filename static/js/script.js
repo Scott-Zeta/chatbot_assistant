@@ -153,7 +153,7 @@ class ChatBot {
       const data = await response.json();
       if (!response.ok) throw new Error(data.error.message);
 
-      messageElement.innerText = data.response.anwser.trim();
+      messageElement.innerText = data.response.answer.trim();
       if (
         data.response.follow_up_questions &&
         data.response.follow_up_questions.length > 0
@@ -286,7 +286,7 @@ class ChatBot {
                 message.content)
             : (messageDiv.querySelector('.message-text').innerText = JSON.parse(
                 message.content
-              ).anwser);
+              ).answer);
           console.log(message.content);
           DOM_ELEMENTS.chatBody.appendChild(messageDiv);
         });
