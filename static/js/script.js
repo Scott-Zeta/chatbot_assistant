@@ -281,7 +281,13 @@ class ChatBot {
             '<div class="message-text"></div>',
             message.role === 'user' ? 'user-message' : 'bot-message'
           );
-          messageDiv.querySelector('.message-text').innerText = message.content;
+          message.role === 'user'
+            ? (messageDiv.querySelector('.message-text').innerText =
+                message.content)
+            : (messageDiv.querySelector('.message-text').innerText = JSON.parse(
+                message.content
+              ).anwser);
+          console.log(message.content);
           DOM_ELEMENTS.chatBody.appendChild(messageDiv);
         });
         this.scrollToBottom();
