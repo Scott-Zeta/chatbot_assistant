@@ -15,6 +15,7 @@
       chatbotContainer.style.position = 'fixed';
       document.body.appendChild(chatbotContainer);
 
+      document.body.classList.add('show-chatbot');
       // Load CSS dynamically
       const link = document.createElement('link');
       link.rel = 'stylesheet';
