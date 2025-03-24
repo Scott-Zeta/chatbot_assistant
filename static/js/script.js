@@ -104,7 +104,7 @@ class ChatBot {
     this.showBotResponse().then((incomingMessageDiv) => {
       const messageElement = incomingMessageDiv.querySelector('.message-text');
       messageElement.innerText =
-        'Which topic would you like to know more about NDIS?';
+        'Which topic would you like to know about NDIS?';
       incomingMessageDiv.classList.remove('thinking');
       const promptMessageDiv = this.createMessageElement('', 'user-message');
       const promptGroup = document.createElement('div');
@@ -119,7 +119,7 @@ class ChatBot {
               messageElement.innerText =
                 'Here are some common questions about ' +
                 topic.topic +
-                'Please feel free to type your question or select one of the following:';
+                ', Please feel free to type your question or select one of the following:';
               incomingMessageDiv.classList.remove('thinking');
             })
             .then(() => {
