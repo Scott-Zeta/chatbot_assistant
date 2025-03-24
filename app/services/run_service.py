@@ -6,7 +6,7 @@ from pydantic import BaseModel
 from app.functions.weather_utils import get_weather
 
 class NDISResponseModel(BaseModel):
-    anwser: str
+    answer: str
     """The response to the user's inquiry about NDIS."""
 
     follow_up_questions: List[str]

@@ -5,14 +5,13 @@ const DOM_ELEMENTS = {
   sendMessageButton: document.querySelector('#send-message'),
   chatbotToggler: document.querySelector('#chatbot-toggler'),
   closeChatbot: document.querySelector('#close-chatbot'),
-  promptButtons: document.querySelectorAll('.prompt-group .prompt'),
 };
 
 const CONFIG = {
   BASE_URL: 'http://127.0.0.1:5000',
   API_URL: '/assist',
   HISTORY_API_URL: '/history',
-  THINKING_DELAY: 600,
+  THINKING_DELAY: 1000,
 };
 
 const TEMPLATE = {
@@ -20,6 +19,75 @@ const TEMPLATE = {
     <path d="M738.3 287.6H285.7c-59 0-106.8 47.8-106.8 106.8v303.1c0 59 47.8 106.8 106.8 106.8h81.5v111.1c0 .7.8 1.1 1.4.7l166.9-110.6 41.8-.8h117.4l43.6-.4c59 0 106.8-47.8 106.8-106.8V394.5c0-59-47.8-106.9-106.8-106.9zM351.7 448.2c0-29.5 23.9-53.5 53.5-53.5s53.5 23.9 53.5 53.5-23.9 53.5-53.5 53.5-53.5-23.9-53.5-53.5zm157.9 267.1c-67.8 0-123.8-47.5-132.3-109h264.6c-8.6 61.5-64.5 109-132.3 109zm110-213.7c-29.5 0-53.5-23.9-53.5-53.5s23.9-53.5 53.5-53.5 53.5 23.9 53.5 53.5-23.9 53.5-53.5 53.5zM867.2 644.5V453.1h26.5c19.4 0 35.1 15.7 35.1 35.1v121.1c0 19.4-15.7 35.1-35.1 35.1h-26.5zM95.2 609.4V488.2c0-19.4 15.7-35.1 35.1-35.1h26.5v191.3h-26.5c-19.4 0-35.1-15.7-35.1-35.1zM561.5 149.6c0 23.4-15.6 43.3-36.9 49.7v44.9h-30v-44.9c-21.4-6.5-36.9-26.3-36.9-49.7 0-28.6 23.3-51.9 51.9-51.9s51.9 23.3 51.9 51.9z"/>
   </svg>`,
 };
+
+const ndisFAQs = [
+  {
+    id: 1,
+    topic: 'Introduction to the NDIS',
+    questions: [
+      'What is the NDIS, and how does it work?',
+      'Who is eligible for the NDIS?',
+      'How do I apply for the NDIS?',
+      'What types of support does the NDIS cover?',
+      'What is the difference between the NDIS and other government disability services?',
+    ],
+  },
+  {
+    id: 2,
+    topic: 'Eligibility & Application',
+    questions: [
+      'How do I know if I meet the NDIS eligibility criteria?',
+      'What documents do I need to provide for my application?',
+      'How long does it take to get approved for the NDIS?',
+      'What happens if my application is rejected?',
+      'Can I appeal an NDIS decision if I am found ineligible?',
+    ],
+  },
+  {
+    id: 3,
+    topic: 'NDIS Plans & Funding',
+    questions: [
+      'How is my NDIS funding determined?',
+      'What is the difference between Core, Capacity Building, and Capital Supports?',
+      'How can I use my NDIS funds?',
+      'Can I change my NDIS plan if my needs change?',
+      'What is a plan review, and how do I request one?',
+    ],
+  },
+  {
+    id: 4,
+    topic: 'NDIS Support & Services',
+    questions: [
+      'What kinds of services and supports can I access through the NDIS?',
+      'Can the NDIS help with housing or home modifications?',
+      'Does the NDIS cover assistive technology, such as wheelchairs or communication devices?',
+      'How do I find and choose NDIS service providers?',
+      'Can I use NDIS funding for therapy and counseling?',
+    ],
+  },
+  {
+    id: 5,
+    topic: 'Managing an NDIS Plan',
+    questions: [
+      'What are the different types of NDIS plan management (self-managed, plan-managed, NDIA-managed)?',
+      'How do I track my NDIS funding and spending?',
+      'Can I switch from NDIA-managed to self-managed or plan-managed?',
+      'What happens if I run out of NDIS funds before my plan ends?',
+      'Can I hire my own support workers with NDIS funding?',
+    ],
+  },
+  {
+    id: 6,
+    topic: 'Other NDIS-Related Topics',
+    questions: [
+      'How does the NDIS work with Medicare and private health insurance?',
+      'Can I use NDIS funding for travel and transport?',
+      'What happens to my NDIS plan if I move interstate?',
+      'What should I do if I have a complaint about my NDIS plan or provider?',
+      'How does the NDIS support people with psychosocial disabilities?',
+    ],
+  },
+];
 
 class ChatBot {
   constructor() {
@@ -29,6 +97,42 @@ class ChatBot {
     };
     this.initializeEventListeners();
     this.loadChatHistory();
+    this.generateMenuSelections();
+  }
+
+  generateMenuSelections() {
+    this.showBotResponse().then((incomingMessageDiv) => {
+      const messageElement = incomingMessageDiv.querySelector('.message-text');
+      messageElement.innerText =
+        'Which topic would you like to know about NDIS?';
+      incomingMessageDiv.classList.remove('thinking');
+      const promptMessageDiv = this.createMessageElement('', 'user-message');
+      const promptGroup = document.createElement('div');
+      promptGroup.className = 'prompt-group';
+
+      ndisFAQs.forEach((topic) => {
+        const button = this.createPromptButton(topic.topic, () => {
+          this.showBotResponse()
+            .then((incomingMessageDiv) => {
+              const messageElement =
+                incomingMessageDiv.querySelector('.message-text');
+              messageElement.innerText =
+                'Here are some common questions about ' +
+                topic.topic +
+                ', Please feel free to type your question or select one of the following:';
+              incomingMessageDiv.classList.remove('thinking');
+            })
+            .then(() => {
+              this.createfollowUpQuestions(topic.questions);
+              this.scrollToBottom();
+            });
+        });
+        promptGroup.appendChild(button);
+      });
+      promptMessageDiv.appendChild(promptGroup);
+      DOM_ELEMENTS.chatBody.appendChild(promptMessageDiv);
+      this.scrollToBottom();
+    });
   }
 
   async generateBotResponse(incomingMessageDiv) {
@@ -45,7 +149,7 @@ class ChatBot {
       const data = await response.json();
       if (!response.ok) throw new Error(data.error.message);
 
-      messageElement.innerText = data.response.anwser.trim();
+      messageElement.innerText = data.response.answer.trim();
       if (
         data.response.follow_up_questions &&
         data.response.follow_up_questions.length > 0
@@ -76,16 +180,23 @@ class ChatBot {
     promptGroup.className = 'prompt-group';
 
     questions.forEach((question) => {
-      const button = document.createElement('button');
-      button.className = 'prompt';
-      button.innerText = question;
-      button.addEventListener('click', () => {
+      const button = this.createPromptButton(question, () => {
         this.messageState.currentMessage = question;
         this.appendUserMessage(question);
-        this.showBotResponse();
+        this.showBotResponse().then((incomingMessageDiv) => {
+          this.generateBotResponse(incomingMessageDiv);
+        });
       });
       promptGroup.appendChild(button);
     });
+
+    const button = this.createPromptButton(
+      'I would like to know something else about NDIS',
+      () => {
+        this.generateMenuSelections();
+      }
+    );
+    promptGroup.appendChild(button);
 
     promptMessageDiv.appendChild(promptGroup);
     DOM_ELEMENTS.chatBody.appendChild(promptMessageDiv);
@@ -100,6 +211,14 @@ class ChatBot {
       </div>`;
   }
 
+  createPromptButton(text, onClick) {
+    const button = document.createElement('button');
+    button.className = 'prompt';
+    button.innerText = text;
+    button.addEventListener('click', onClick);
+    return button;
+  }
+
   handleOutgoingMessage(e) {
     e.preventDefault();
     const messageText = DOM_ELEMENTS.messageInput.value.trim();
@@ -108,7 +227,9 @@ class ChatBot {
     this.messageState.currentMessage = messageText;
     this.clearInputField();
     this.appendUserMessage(messageText);
-    this.showBotResponse();
+    this.showBotResponse().then((incomingMessageDiv) => {
+      this.generateBotResponse(incomingMessageDiv);
+    });
   }
 
   clearInputField() {
@@ -127,19 +248,21 @@ class ChatBot {
   }
 
   showBotResponse() {
-    setTimeout(() => {
-      const botMessageContent = `${
-        TEMPLATE.BOT_AVATAR_SVG
-      }${this.createThinkingIndicator()}`;
-      const incomingMessageDiv = this.createMessageElement(
-        botMessageContent,
-        'bot-message',
-        'thinking'
-      );
-      DOM_ELEMENTS.chatBody.appendChild(incomingMessageDiv);
-      this.scrollToBottom();
-      this.generateBotResponse(incomingMessageDiv);
-    }, CONFIG.THINKING_DELAY);
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const botMessageContent = `${
+          TEMPLATE.BOT_AVATAR_SVG
+        }${this.createThinkingIndicator()}`;
+        const incomingMessageDiv = this.createMessageElement(
+          botMessageContent,
+          'bot-message',
+          'thinking'
+        );
+        DOM_ELEMENTS.chatBody.appendChild(incomingMessageDiv);
+        this.scrollToBottom();
+        resolve(incomingMessageDiv); // return the message element
+      }, CONFIG.THINKING_DELAY);
+    });
   }
 
   async loadChatHistory() {
@@ -159,7 +282,13 @@ class ChatBot {
             '<div class="message-text"></div>',
             message.role === 'user' ? 'user-message' : 'bot-message'
           );
-          messageDiv.querySelector('.message-text').innerText = message.content;
+          message.role === 'user'
+            ? (messageDiv.querySelector('.message-text').innerText =
+                message.content)
+            : (messageDiv.querySelector('.message-text').innerText = JSON.parse(
+                message.content
+              ).answer);
+          console.log(message.content);
           DOM_ELEMENTS.chatBody.appendChild(messageDiv);
         });
         this.scrollToBottom();
@@ -201,15 +330,6 @@ class ChatBot {
     DOM_ELEMENTS.closeChatbot.addEventListener('click', () =>
       document.body.classList.remove('show-chatbot')
     );
-
-    // Prompt button handlers
-    DOM_ELEMENTS.promptButtons.forEach((button) => {
-      button.addEventListener('click', () => {
-        this.messageState.currentMessage = button.innerText.trim();
-        this.appendUserMessage(this.messageState.currentMessage);
-        this.showBotResponse();
-      });
-    });
   }
 }
 
