@@ -135,6 +135,7 @@ class ChatBot {
       });
       promptMessageDiv.appendChild(promptGroup);
       DOM_ELEMENTS.chatBody.appendChild(promptMessageDiv);
+      this.scrollToBottom();
     });
   }
 
@@ -195,6 +196,14 @@ class ChatBot {
       });
       promptGroup.appendChild(button);
     });
+
+    const button = document.createElement('button');
+    button.className = 'prompt';
+    button.innerText = 'I would like to know something else about NDIS';
+    button.addEventListener('click', () => {
+      this.generateMenuSelections();
+    });
+    promptGroup.appendChild(button);
 
     promptMessageDiv.appendChild(promptGroup);
     DOM_ELEMENTS.chatBody.appendChild(promptMessageDiv);
@@ -314,17 +323,6 @@ class ChatBot {
     DOM_ELEMENTS.closeChatbot.addEventListener('click', () =>
       document.body.classList.remove('show-chatbot')
     );
-
-    // Prompt button handlers
-    DOM_ELEMENTS.promptButtons.forEach((button) => {
-      button.addEventListener('click', () => {
-        this.messageState.currentMessage = button.innerText.trim();
-        this.appendUserMessage(this.messageState.currentMessage);
-        this.showBotResponse().then((incomingMessageDiv) => {
-          this.generateBotResponse(incomingMessageDiv);
-        });
-      });
-    });
   }
 }
 
