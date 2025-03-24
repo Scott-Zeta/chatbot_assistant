@@ -5,7 +5,6 @@ const DOM_ELEMENTS = {
   sendMessageButton: document.querySelector('#send-message'),
   chatbotToggler: document.querySelector('#chatbot-toggler'),
   closeChatbot: document.querySelector('#close-chatbot'),
-  promptButtons: document.querySelectorAll('.prompt-group .prompt'),
 };
 
 const CONFIG = {
@@ -112,10 +111,7 @@ class ChatBot {
       promptGroup.className = 'prompt-group';
 
       ndisFAQs.forEach((topic) => {
-        const button = document.createElement('button');
-        button.className = 'prompt';
-        button.innerText = topic.topic;
-        button.addEventListener('click', () => {
+        const button = this.createPromptButton(topic.topic, () => {
           this.showBotResponse()
             .then((incomingMessageDiv) => {
               const messageElement =
@@ -184,10 +180,7 @@ class ChatBot {
     promptGroup.className = 'prompt-group';
 
     questions.forEach((question) => {
-      const button = document.createElement('button');
-      button.className = 'prompt';
-      button.innerText = question;
-      button.addEventListener('click', () => {
+      const button = this.createPromptButton(question, () => {
         this.messageState.currentMessage = question;
         this.appendUserMessage(question);
         this.showBotResponse().then((incomingMessageDiv) => {
@@ -197,12 +190,12 @@ class ChatBot {
       promptGroup.appendChild(button);
     });
 
-    const button = document.createElement('button');
-    button.className = 'prompt';
-    button.innerText = 'I would like to know something else about NDIS';
-    button.addEventListener('click', () => {
-      this.generateMenuSelections();
-    });
+    const button = this.createPromptButton(
+      'I would like to know something else about NDIS',
+      () => {
+        this.generateMenuSelections();
+      }
+    );
     promptGroup.appendChild(button);
 
     promptMessageDiv.appendChild(promptGroup);
@@ -216,6 +209,14 @@ class ChatBot {
           ${Array(3).fill('<div class="dot"></div>').join('')}
         </div>
       </div>`;
+  }
+
+  createPromptButton(text, onClick) {
+    const button = document.createElement('button');
+    button.className = 'prompt';
+    button.innerText = text;
+    button.addEventListener('click', onClick);
+    return button;
   }
 
   handleOutgoingMessage(e) {
