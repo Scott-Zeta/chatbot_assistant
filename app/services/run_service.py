@@ -11,6 +11,9 @@ class NDISResponseModel(BaseModel):
 
     follow_up_questions: List[str]
     """Relevant follow-up questions to guide the user's exploration."""
+    
+    contact_request: bool = False
+    """Whether the user should be prompted to provide contact information."""
 
 
 class RunService:
@@ -34,7 +37,7 @@ class RunService:
             response_format={'type': 'json_schema',
            'json_schema': 
               {
-                "name":"whocares", 
+                "name":"NDISResponseModel", 
                 "schema": NDISResponseModel.model_json_schema()
               }}
         )
