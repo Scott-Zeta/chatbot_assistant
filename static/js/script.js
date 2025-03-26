@@ -214,13 +214,30 @@ class ChatBot {
       promptGroup.appendChild(button);
     });
 
-    const button = this.createPromptButton(
-      'I would like to know something else about NDIS',
+    const contactButton = this.createPromptButton(
+      'I would like to contact an NDIS Provider ➡️',
+      () => {
+        this.showBotResponse().then((incomingMessageDiv) => {
+          const messageElement =
+            incomingMessageDiv.querySelector('.message-text');
+          messageElement.innerText =
+            'I would like to help. Please fill out the form below and an agent will get back to you as soon as possible.';
+          incomingMessageDiv.classList.remove('thinking');
+          this.displayContactForm();
+          this.scrollToBottom();
+        });
+      }
+    );
+
+    const backButton = this.createPromptButton(
+      '⬅️ I would like to know something else about NDIS',
       () => {
         this.generateMenuSelections();
       }
     );
-    promptGroup.appendChild(button);
+
+    promptGroup.appendChild(contactButton);
+    promptGroup.appendChild(backButton);
 
     promptMessageDiv.appendChild(promptGroup);
     DOM_ELEMENTS.chatBody.appendChild(promptMessageDiv);
