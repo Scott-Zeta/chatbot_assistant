@@ -52,7 +52,7 @@ body.show-chatbot #chatbot-toggler span:last-child {
   position: fixed;
   right: 75px;
   bottom: 90px;
-  width: 500px;
+  width: 35vw;
   background: #fff;
   overflow: hidden;
   border-radius: 15px;
@@ -125,7 +125,7 @@ body.show-chatbot .chatbot-popup {
   padding: 25px 22px;
   display: flex;
   gap: 20px;
-  height: 460px;
+  height: 65vh;
   margin-bottom: 82px;
   overflow-y: auto;
   flex-direction: column;
@@ -314,6 +314,44 @@ body.show-chatbot .chatbot-popup {
 
 .chat-form .chat-controls button:hover {
   background: #f1f1ff;
+}
+
+/* Contact Form */
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+}
+
+.contact-form input[type='text'],
+.contact-form input[type='email'],
+.contact-form input[type='tel'],
+.contact-form select,
+.contact-form textarea {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.contact-form .form-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.contact-form button {
+  padding: 8px 16px;
+  background: #5350c4;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.contact-form button:hover {
+  background: #3d39ac;
 }
 
 /* Responsive media query for mobile screens */

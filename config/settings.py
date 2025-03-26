@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -16,5 +17,7 @@ class Config:
     
     SESSION_COOKIE_SETTINGS = {
         'SAMESITE': "None",
-        'SECURE': True
+        'SECURE': True,
+        'PERMANENT_SESSION_LIFETIME': timedelta(minutes=30),
+        'SESSION_PERMANENT': True 
     }

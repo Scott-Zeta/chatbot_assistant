@@ -3,7 +3,7 @@ import time
 from typing import List
 import openai
 from pydantic import BaseModel
-from app.functions.weather_utils import get_weather
+from app.functions.contact_functions import get_contact_info
 
 class NDISResponseModel(BaseModel):
     answer: str
@@ -11,6 +11,9 @@ class NDISResponseModel(BaseModel):
 
     follow_up_questions: List[str]
     """Relevant follow-up questions to guide the user's exploration."""
+    
+    contact_request: bool = False
+    """Whether the user should be prompted to provide contact information."""
 
 
 class RunService:
@@ -34,7 +37,7 @@ class RunService:
             response_format={'type': 'json_schema',
            'json_schema': 
               {
-                "name":"whocares", 
+                "name":"NDISResponseModel", 
                 "schema": NDISResponseModel.model_json_schema()
               }}
         )
@@ -56,8 +59,8 @@ class RunService:
         tool_outputs = []
         for tool in run.required_action.submit_tool_outputs.tool_calls:
             arguments = json.loads(tool.function.arguments)
-            if tool.function.name == "get_weather":
-                output = get_weather(city=arguments['city'])
+            if tool.function.name == "get_user_contact_info":
+                output = get_contact_info(name=arguments.get('name'), email=arguments.get('email'), phone=arguments.get('phone'), online=arguments.get('online'), contact_preference=arguments.get('contact_preference'), additional_info=arguments.get('additional_text'))
                 tool_outputs.append({
                     "tool_call_id": tool.id,
                     "output": output

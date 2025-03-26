@@ -11,6 +11,7 @@ const CONFIG = {
   BASE_URL: 'http://127.0.0.1:5000',
   API_URL: '/assist',
   HISTORY_API_URL: '/history',
+  CONTACT_INFO_API_URL: '/contact',
   THINKING_DELAY: 1000,
 };
 
@@ -18,6 +19,22 @@ const TEMPLATE = {
   BOT_AVATAR_SVG: `<svg class="bot-avatar" xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 1024 1024">
     <path d="M738.3 287.6H285.7c-59 0-106.8 47.8-106.8 106.8v303.1c0 59 47.8 106.8 106.8 106.8h81.5v111.1c0 .7.8 1.1 1.4.7l166.9-110.6 41.8-.8h117.4l43.6-.4c59 0 106.8-47.8 106.8-106.8V394.5c0-59-47.8-106.9-106.8-106.9zM351.7 448.2c0-29.5 23.9-53.5 53.5-53.5s53.5 23.9 53.5 53.5-23.9 53.5-53.5 53.5-53.5-23.9-53.5-53.5zm157.9 267.1c-67.8 0-123.8-47.5-132.3-109h264.6c-8.6 61.5-64.5 109-132.3 109zm110-213.7c-29.5 0-53.5-23.9-53.5-53.5s23.9-53.5 53.5-53.5 53.5 23.9 53.5 53.5-23.9 53.5-53.5 53.5zM867.2 644.5V453.1h26.5c19.4 0 35.1 15.7 35.1 35.1v121.1c0 19.4-15.7 35.1-35.1 35.1h-26.5zM95.2 609.4V488.2c0-19.4 15.7-35.1 35.1-35.1h26.5v191.3h-26.5c-19.4 0-35.1-15.7-35.1-35.1zM561.5 149.6c0 23.4-15.6 43.3-36.9 49.7v44.9h-30v-44.9c-21.4-6.5-36.9-26.3-36.9-49.7 0-28.6 23.3-51.9 51.9-51.9s51.9 23.3 51.9 51.9z"/>
   </svg>`,
+  FORM_TEMPLATE: `<form class="contact-form">
+    <input type="text" name="name" placeholder="Full Name" required>
+    <input type="tel" name="phone" placeholder="Phone Number" required>
+    <input type="email" name="email" placeholder="Email Address" required>
+    <input type="text" name="online" placeholder="Online contact URL (Optional)">
+    <div class="form-group">
+      <label>Contact Preference:</label>
+      <select name="contact_preference" required>
+        <option value="phone">Phone</option>
+        <option value="email">Email</option>
+        <option value="online">Online</option>
+      </select>
+    </div>
+    <textarea name="additional_info" placeholder="Additional Information"></textarea>
+    <button type="submit">Submit</button>
+  </form>`,
 };
 
 const ndisFAQs = [
@@ -96,7 +113,11 @@ class ChatBot {
       initialInputHeight: DOM_ELEMENTS.messageInput.scrollHeight,
     };
     this.initializeEventListeners();
-    this.loadChatHistory();
+    this.init();
+  }
+
+  async init() {
+    await this.loadChatHistory();
     this.generateMenuSelections();
   }
 
@@ -156,6 +177,9 @@ class ChatBot {
       ) {
         this.createfollowUpQuestions(data.response.follow_up_questions);
       }
+      if (data.response.contact_request) {
+        this.displayContactForm();
+      }
     } catch (error) {
       console.error('API Error:', error);
       messageElement.innerText = error.message;
@@ -190,13 +214,30 @@ class ChatBot {
       promptGroup.appendChild(button);
     });
 
-    const button = this.createPromptButton(
-      'I would like to know something else about NDIS',
+    const contactButton = this.createPromptButton(
+      'I would like to contact an NDIS Provider ➡️',
+      () => {
+        this.showBotResponse().then((incomingMessageDiv) => {
+          const messageElement =
+            incomingMessageDiv.querySelector('.message-text');
+          messageElement.innerText =
+            'I would like to help. Please fill out the form below and an agent will get back to you as soon as possible.';
+          incomingMessageDiv.classList.remove('thinking');
+          this.displayContactForm();
+          this.scrollToBottom();
+        });
+      }
+    );
+
+    const backButton = this.createPromptButton(
+      '⬅️ I would like to know something else about NDIS',
       () => {
         this.generateMenuSelections();
       }
     );
-    promptGroup.appendChild(button);
+
+    promptGroup.appendChild(contactButton);
+    promptGroup.appendChild(backButton);
 
     promptMessageDiv.appendChild(promptGroup);
     DOM_ELEMENTS.chatBody.appendChild(promptMessageDiv);
@@ -288,7 +329,7 @@ class ChatBot {
             : (messageDiv.querySelector('.message-text').innerText = JSON.parse(
                 message.content
               ).answer);
-          console.log(message.content);
+          // console.log(message.content);
           DOM_ELEMENTS.chatBody.appendChild(messageDiv);
         });
         this.scrollToBottom();
@@ -298,6 +339,79 @@ class ChatBot {
     }
   }
 
+  // ** Contact Form Functions ** //
+  displayContactForm() {
+    const messageDiv = this.createMessageElement('', 'bot-message');
+    messageDiv.innerHTML =
+      TEMPLATE.BOT_AVATAR_SVG +
+      `<div class="message-text">${TEMPLATE.FORM_TEMPLATE}</div>`;
+
+    const form = messageDiv.querySelector('form');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      this.handleFormSubmission(form);
+      messageDiv.remove();
+    });
+
+    DOM_ELEMENTS.chatBody.appendChild(messageDiv);
+    this.scrollToBottom();
+  }
+
+  handleFormSubmission(form) {
+    const formData = {
+      name: form.name.value,
+      email: form.email.value,
+      phone: form.phone.value,
+      online: form.online.value,
+      contact_preference: form.contact_preference.value,
+      additional_text: form.additional_info.value,
+    };
+
+    fetch(`${CONFIG.BASE_URL}${CONFIG.CONTACT_INFO_API_URL}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({
+        type: 'contact_form',
+        data: formData,
+      }),
+    })
+      .then(async (response) => {
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(
+            typeof data.error === 'string'
+              ? data.error
+              : JSON.stringify(data.error)
+          );
+        }
+
+        return data;
+      })
+      .then((data) => {
+        if (data.response) {
+          this.showBotResponse().then((incomingMessageDiv) => {
+            const messageElement =
+              incomingMessageDiv.querySelector('.message-text');
+            messageElement.innerText = data.response.answer;
+            incomingMessageDiv.classList.remove('thinking');
+          });
+        }
+      })
+      .catch((error) => {
+        this.showBotResponse().then((incomingMessageDiv) => {
+          const messageElement =
+            incomingMessageDiv.querySelector('.message-text');
+          messageElement.innerText = error.message;
+          messageElement.style.color = 'red';
+          incomingMessageDiv.classList.remove('thinking');
+        });
+        console.error('Error:', error);
+      });
+  }
+
+  // ** Helper Functions ** //
   scrollToBottom() {
     DOM_ELEMENTS.chatBody.scrollTo({
       top: DOM_ELEMENTS.chatBody.scrollHeight,
