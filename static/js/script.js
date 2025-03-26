@@ -22,7 +22,7 @@ const TEMPLATE = {
   FORM_TEMPLATE: `<form class="contact-form">
     <input type="text" name="name" placeholder="Full Name" required>
     <input type="tel" name="phone" placeholder="Phone Number" required>
-    <input type="email" name="email" placeholder="Email Address (Optional)">
+    <input type="email" name="email" placeholder="Email Address" required>
     <input type="text" name="online" placeholder="Online contact URL (Optional)">
     <div class="form-group">
       <label>Contact Preference:</label>
@@ -350,7 +350,6 @@ class ChatBot {
       additional_text: form.additional_info.value,
     };
 
-    // Send the form data to the assistant
     fetch(`${CONFIG.BASE_URL}${CONFIG.CONTACT_INFO_API_URL}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -360,7 +359,19 @@ class ChatBot {
         data: formData,
       }),
     })
-      .then((response) => response.json())
+      .then(async (response) => {
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(
+            typeof data.error === 'string'
+              ? data.error
+              : JSON.stringify(data.error)
+          );
+        }
+
+        return data;
+      })
       .then((data) => {
         if (data.response) {
           this.showBotResponse().then((incomingMessageDiv) => {
@@ -371,7 +382,16 @@ class ChatBot {
           });
         }
       })
-      .catch((error) => console.error('Error:', error));
+      .catch((error) => {
+        this.showBotResponse().then((incomingMessageDiv) => {
+          const messageElement =
+            incomingMessageDiv.querySelector('.message-text');
+          messageElement.innerText = error.message;
+          messageElement.style.color = 'red';
+          incomingMessageDiv.classList.remove('thinking');
+        });
+        console.error('Error:', error);
+      });
   }
 
   // ** Helper Functions ** //
