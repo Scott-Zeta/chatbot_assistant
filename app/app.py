@@ -14,6 +14,9 @@ def create_app():
     
     # Register blueprints
     from app.routes.chat_routes import chat_bp
+    from app.routes.contact_routes import contact_bp
+    
     app.register_blueprint(chat_bp)
+    app.register_blueprint(contact_bp)
     
     return app
