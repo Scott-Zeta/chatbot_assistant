@@ -11,6 +11,7 @@ const CONFIG = {
   BASE_URL: 'http://127.0.0.1:5000',
   API_URL: '/assist',
   HISTORY_API_URL: '/history',
+  CONTACT_INFO_API_URL: '/contact',
   THINKING_DELAY: 1000,
 };
 
@@ -176,6 +177,9 @@ class ChatBot {
       ) {
         this.createfollowUpQuestions(data.response.follow_up_questions);
       }
+      if (data.response.contact_request) {
+        this.displayContactForm();
+      }
     } catch (error) {
       console.error('API Error:', error);
       messageElement.innerText = error.message;
@@ -318,22 +322,59 @@ class ChatBot {
     }
   }
 
-  // Contact Form functions
+  // ** Contact Form Functions ** //
   displayContactForm() {
     const messageDiv = this.createMessageElement('', 'bot-message');
-    messageDiv.innerHTML = `<div class="message-text">${TEMPLATE.FORM_TEMPLATE}</div>`;
+    messageDiv.innerHTML =
+      TEMPLATE.BOT_AVATAR_SVG +
+      `<div class="message-text">${TEMPLATE.FORM_TEMPLATE}</div>`;
 
     const form = messageDiv.querySelector('form');
     form.addEventListener('submit', (e) => {
       e.preventDefault();
-      alert('Form submitted');
-      // this.handleFormSubmission(form);
-      form.remove(); // Remove form after submission
+      this.handleFormSubmission(form);
+      messageDiv.remove();
     });
 
     DOM_ELEMENTS.chatBody.appendChild(messageDiv);
     this.scrollToBottom();
   }
+
+  handleFormSubmission(form) {
+    const formData = {
+      name: form.name.value,
+      email: form.email.value,
+      phone: form.phone.value,
+      online: form.online.value,
+      contact_preference: form.contact_preference.value,
+      additional_text: form.additional_info.value,
+    };
+
+    // Send the form data to the assistant
+    fetch(`${CONFIG.BASE_URL}${CONFIG.CONTACT_INFO_API_URL}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({
+        type: 'contact_form',
+        data: formData,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.response) {
+          this.showBotResponse().then((incomingMessageDiv) => {
+            const messageElement =
+              incomingMessageDiv.querySelector('.message-text');
+            messageElement.innerText = data.response.answer;
+            incomingMessageDiv.classList.remove('thinking');
+          });
+        }
+      })
+      .catch((error) => console.error('Error:', error));
+  }
+
+  // ** Helper Functions ** //
   scrollToBottom() {
     DOM_ELEMENTS.chatBody.scrollTo({
       top: DOM_ELEMENTS.chatBody.scrollHeight,
