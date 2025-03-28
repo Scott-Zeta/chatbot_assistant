@@ -2,50 +2,68 @@
 
 ## Overview
 
-The Chatbot Assistant is a web-based application that uses OpenAI’s Assistant API to provide responsive, intelligent conversations. The application is built with the Flask framework for managing server-side logic and uses standard web technologies (HTML, CSS, and JavaScript) for its user interface. This setup ensures the chatbot is both powerful and easy to interact with.
+The Chatbot Assistant is a user-friendly web application designed to provide intelligent and responsive conversations. It leverages advanced AI technology to assist users in understanding and exploring topics, such as the National Disability Insurance Scheme (NDIS). The chatbot is accessible through a sleek web interface and can also be integrated into other websites as a widget.
 
-## Features
+## Key Features
 
-1. **Conversational Interaction**:  
-   Engage in basic, natural-sounding chats. Simply type your question, and the chatbot will respond in real time.
+1. **Interactive Conversations**:  
+   Engage in natural, real-time conversations with the chatbot. Simply type your question, and the chatbot will respond promptly.
 
-2. **User-Specific Conversations**:  
-   Each user’s conversation is tracked using Flask sessions. This means multiple users can chat with the bot at the same time, and each person’s chat history remains separate and private.
+2. **Personalized Experience**:  
+   Each user’s conversation is private and tracked separately, ensuring a tailored experience for everyone.
 
-3. **File-Based Knowledge Retrieval**:  
-   Upload files to a vector database and the chatbot can search for information within those files to provide more accurate, context-specific answers.
+3. **Knowledge Retrieval**:  
+   The chatbot can search through uploaded documents to provide accurate and context-specific answers.
 
-4. **Function Calling (e.g. Weather Information)**:  
-   The chatbot can call external functions based on your requests. For example, it can fetch current weather data for any city as a demonstration of this functionality.
+4. **Practical Assistance**:  
+   The chatbot can perform tasks like fetching weather information for any city, showcasing its ability to integrate with external services.
 
-5. **Flexible Integration Options**:  
-   Use the standalone user interface or integrate the chatbot into your own website via the provided widget JavaScript file.
+5. **Seamless Integration**:  
+   The chatbot can be easily embedded into any website, making it a versatile tool for businesses and organizations.
 
-## Requirements
+## How It Works
 
-1. **OpenAI API Access**:  
-   You will need a valid OpenAI API key with sufficient credit to support the Assistant’s functionality.
+1. **AI-Powered Responses**:  
+   The chatbot uses OpenAI’s advanced language model to understand and respond to user queries intelligently.
 
-2. **Optional Weather API Access**:  
-   To enable the weather fetching feature, you will need a free current weather API key from [Weatherbit](https://www.weatherbit.io/api).
+2. **Document Search**:  
+   By uploading files, users can enable the chatbot to retrieve information directly from those documents.
 
-## Running the Application
+3. **Functionality Expansion**:  
+   The chatbot can call external APIs, such as weather services, to provide additional helpful information.
 
-1. **Create or Configure Your Assistant**:  
-   You can run `./initial/assistant_manager.py` to create an Assistant, but it is often easier to use the [OpenAI Dashboard](https://platform.openai.com/assistants) to manage your assistants. This reduces the risk of creating multiple duplicate assistants.
+## Why It Stands Out
 
-2. **Set Your Assistant ID**:  
-   Copy the Assistant ID from the OpenAI dashboard and paste it into the `.env` file as `ASSISTANT_ID=`.
+- **User-Centric Design**:  
+   The chatbot is designed to be intuitive and easy to use, even for those with no technical background.
 
-3. **Start the Application**:  
-   Run `./app.py` to start the server.
+- **Customizable and Scalable**:  
+   Businesses can integrate the chatbot into their websites and customize it to meet their specific needs.
 
-4. **Access the User Interface**:  
-   Open a web browser and go to `http://localhost:5000`. You will see the chatbot’s graphical interface, ready for interaction.
+- **Real-World Applications**:  
+   From answering FAQs to assisting with customer support, the chatbot is a practical tool for various industries.
 
-5. **Embed the Widget**:  
-   To integrate the chatbot into another website, add the following script tag to your site’s HTML:
+## Getting Started
+
+1. **Access the Chatbot**:  
+   Open a web browser and visit the chatbot’s interface at `http://localhost:5000`.
+
+2. **Embed the Widget**:  
+   To integrate the chatbot into your website, simply add the following script tag to your HTML:
+
    ```html
    <script src="http://localhost:5000/static/js/widget.js" defer></script>
    ```
-   This allows you to include the chatbot widget seamlessly.
+
+3. **Explore Its Features**:  
+   Interact with the chatbot to experience its capabilities, such as answering questions, retrieving document-based information, and fetching weather updates.
+
+## Technical Details (Optional)
+
+For those interested in the technical aspects, the chatbot is built using:
+
+- **Flask Framework**: For managing server-side logic.
+- **HTML, CSS, and JavaScript**: For the user interface.
+- **OpenAI API**: For AI-powered responses.
+
+The application is designed to be lightweight, secure, and easy to deploy, making it suitable for both small-scale and enterprise-level use cases.
