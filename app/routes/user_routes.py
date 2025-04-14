@@ -19,8 +19,15 @@ def signup():
   
 @user_bp.route('/login', methods=["POST"])
 def login():
-    # Placeholder for login logic
-    return "User login endpoint"
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
+
+    if not email or not password:
+        return jsonify({'error': 'Email and password required'}), 400
+
+    response, status_code = user_service.authenticate_user(email, password)
+    return jsonify(response), status_code
   
 @user_bp.route('/logout', methods=["POST"])
 def logout():
