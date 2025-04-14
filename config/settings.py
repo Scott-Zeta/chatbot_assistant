@@ -9,6 +9,10 @@ class Config:
     ASSISTANT_ID = os.getenv("ASSISTANT_ID")
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
     
+    # Database Config
+    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL")
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    
     # Flask Config
     CORS_SETTINGS = {
         'supports_credentials': True,
