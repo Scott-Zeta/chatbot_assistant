@@ -41,21 +41,22 @@ Here’s a detailed **step-by-step plan** to overhaul your chatbot application, 
 
 2. **Authentication**:
 
-   - Implement JWT-based authentication for the admin panel.
+   - Implement JWT-based authentication for the dashboard.
    - Create login and user management APIs:
-     - `POST /api/admin/login`
-     - `POST /api/users`
-     - `GET /api/users`
+     - `POST /api/users/login`
+     - `POST /api/users/signup`
+     - `POST /api/users/logout`
 
-3. **Tenant Management**:
+3. **Assistant Management**:
 
    - Create APIs for tenant creation and management:
-     - `POST /api/tenants`
-     - `GET /api/tenants`
-   - Add middleware to resolve the tenant context based on `tenant_id`.
+     - `POST /api/assistants`
+     - `GET /api/assistants`
+     - `DELETE /api/assistants`
+     - `PUT /api/assistants`
 
 4. **Refactor Assistant Management**:
-   - Update `/assist` and `/history` endpoints to include `tenant_id`.
+   - Update `/api/chat` and `/api/history` endpoints to include `tenant_id`.
    - Ensure tenant isolation for all assistant-related data.
 
 ---
