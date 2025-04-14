@@ -1,11 +1,21 @@
-from flask import Blueprint
+from flask import Blueprint, request, jsonify
+from app.services.user_service import UserService
 
 user_bp = Blueprint('user', __name__)
 
+user_service = UserService()
+
 @user_bp.route('/signup', methods=["POST"])
 def signup():
-    # Placeholder for signup logic
-    return "User signup endpoint"
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
+
+    if not email or not password:
+        return jsonify({'error': 'Email and password required'}), 400
+
+    response, status_code = user_service.create_user(email, password)
+    return jsonify(response), status_code
   
 @user_bp.route('/login', methods=["POST"])
 def login():
