@@ -18,29 +18,24 @@ Here’s a detailed **step-by-step plan** to overhaul your chatbot application, 
    - Design schemas for tenants, assistants, and users:
 
      ```sql
-     CREATE TABLE tenants (
-         id SERIAL PRIMARY KEY,
-         name VARCHAR(255) NOT NULL,
-         tenant_id VARCHAR(255) UNIQUE NOT NULL,
-         created_at TIMESTAMP DEFAULT NOW()
-     );
-
      CREATE TABLE assistants (
-         id SERIAL PRIMARY KEY,
-         tenant_id INT REFERENCES tenants(id),
+         id UUID PRIMARY KEY,
+         user_id REFERENCES users(id),
+         assitant_id VARCHAR(255) NOT NULL,
          name VARCHAR(255) NOT NULL,
          model VARCHAR(255) NOT NULL,
          instructions TEXT NOT NULL,
          created_at TIMESTAMP DEFAULT NOW()
+         edited_at TIMESTAMP DEFAULT NOW()
      );
 
      CREATE TABLE users (
-         id SERIAL PRIMARY KEY,
-         tenant_id INT REFERENCES tenants(id),
+         id UUID PRIMARY KEY,
          email VARCHAR(255) UNIQUE NOT NULL,
          password VARCHAR(255) NOT NULL,
-         role VARCHAR(50) NOT NULL, -- e.g., 'admin', 'user'
+         role VARCHAR(50) NOT NULL,
          created_at TIMESTAMP DEFAULT NOW()
+         edited_at TIMESTAMP DEFAULT NOW()
      );
      ```
 
