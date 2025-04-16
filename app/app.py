@@ -2,8 +2,13 @@ from flask import Flask
 from flask_cors import CORS
 from app.models.db import db  # Import the db instance directly, not the module
 from config.settings import Config
+import logging
 
 def create_app():
+    logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s [%(levelname)s] %(message)s'
+)
     app = Flask(__name__,template_folder='../templates',static_folder='../static')
     app.config.from_object(Config)
     

@@ -4,6 +4,7 @@ from app.services.chat_service.thread_service import ThreadService
 from app.services.chat_service.run_service import RunService
 from app.utils.rate_limiter import rate_limit
 from app.utils.validators import MessageSchema, validate_request
+from app.utils.timer import timer
 
 chat_bp = Blueprint('chat', __name__)
 assistant_service = AssistantService()
@@ -15,6 +16,7 @@ def chat_widget():
     return render_template('bot_widget.html')
 
 @chat_bp.route('/assist', methods=["POST"])
+@timer
 @rate_limit(calls=30, period=3600)
 @validate_request(MessageSchema())
 def assist():
