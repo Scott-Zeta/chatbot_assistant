@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request, render_template
-from app.services.assistant_service import AssistantService
-from app.services.thread_service import ThreadService
-from app.services.run_service import RunService
+from app.services.chat_service.assistant_service import AssistantService
+from app.services.chat_service.thread_service import ThreadService
+from app.services.chat_service.run_service import RunService
 from app.utils.rate_limiter import rate_limit
 from app.utils.validators import MessageSchema, validate_request
 
