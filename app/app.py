@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_cors import CORS
-from app.modules.db import db  # Import the db instance directly, not the module
+from app.models.db import db  # Import the db instance directly, not the module
 from config.settings import Config
 
 def create_app():
@@ -19,7 +19,9 @@ def create_app():
     # Register blueprints
     from app.routes.chat_routes import chat_bp
     from app.routes.contact_routes import contact_bp
+    from app.routes.user_routes import user_bp
     
+    app.register_blueprint(user_bp, url_prefix='/api/user')
     app.register_blueprint(chat_bp)
     app.register_blueprint(contact_bp)
     

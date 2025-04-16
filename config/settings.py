@@ -13,6 +13,10 @@ class Config:
     SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
+    # JWT Config
+    JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
+    JWT_EXPIRATION_TIME = os.getenv("JWT_EXPIRATION_TIME", default=1)  # Default to 1 hour if not set
+    
     # Flask Config
     CORS_SETTINGS = {
         'supports_credentials': True,
