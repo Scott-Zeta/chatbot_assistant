@@ -1,8 +1,8 @@
-import jwt as pyjwt
+import jwt as jwt
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
 from config.settings import Config
-from app.modules.db import db, User
+from app.models.db import db, User
 
 class UserService:
   def create_user(self, email, password):
@@ -22,7 +22,7 @@ class UserService:
     if not user or not check_password_hash(user.password, password):
         return {'error': 'Invalid credentials'}, 401
 
-    token = pyjwt.encode({
+    token = jwt.encode({
         'user_id': str(user.id),
         'role': user.role,
         'exp': datetime.now() + timedelta(hours=int(Config.JWT_EXPIRATION_TIME))
