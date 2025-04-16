@@ -269,3 +269,9 @@ Here’s a detailed **step-by-step plan** to overhaul your chatbot application, 
 ---
 
 This plan provides a clear roadmap for transforming your chatbot into a multi-tenant SaaS platform while keeping the scope manageable for a junior developer. Let me know if you need help with any specific phase!
+
+## Memorandum
+
+- Token validator
+- Detailed user profile info
+- Input validator
