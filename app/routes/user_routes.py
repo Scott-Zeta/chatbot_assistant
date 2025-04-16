@@ -1,5 +1,6 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, g
 from app.services.user_service import UserService
+from app.utils.auth import token_required
 
 user_bp = Blueprint('user', __name__)
 
@@ -28,19 +29,16 @@ def login():
 
     response, status_code = user_service.authenticate_user(email, password)
     return jsonify(response), status_code
-  
-@user_bp.route('/logout', methods=["POST"])
-def logout():
-    # Placeholder for logout logic
-    return "User logout endpoint"
 
-@user_bp.route('/profile/<user_id>', methods=["GET"])
-def get_user_profile(user_id):
-    # Placeholder for getting user profile logic
-    return f"User profile for user_id: {user_id}"
-  
 @user_bp.route('/profile', methods=["GET"])
+@token_required
 def profile():
-    # Placeholder for profile logic
-    return "User profile endpoint"
+    current_user = g.get('current_user')
+    if not current_user:
+        return jsonify({'error': 'User not found'}), 404
+    user_info = user_service.get_current_user(current_user)
+    return jsonify(user_info), 200
+
+
+
   

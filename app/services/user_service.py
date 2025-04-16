@@ -29,3 +29,12 @@ class UserService:
     }, Config.JWT_SECRET_KEY, algorithm='HS256')
 
     return {'token': token}, 200
+  
+  def get_current_user(self,current_user):
+    return {
+        'id': str(current_user.id),
+        'email': current_user.email,
+        'role': current_user.role,
+        'created_at': str(current_user.created_at),
+    }
+    
