@@ -20,8 +20,10 @@ def create_app():
     from app.routes.chat_routes import chat_bp
     from app.routes.contact_routes import contact_bp
     from app.routes.user_routes import user_bp
+    from app.routes.assistant_routes import assistant_bp
     
     app.register_blueprint(user_bp, url_prefix='/api/user')
+    app.register_blueprint(assistant_bp, url_prefix='/api/assistant')
     app.register_blueprint(chat_bp)
     app.register_blueprint(contact_bp)
     
