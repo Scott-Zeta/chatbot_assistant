@@ -42,10 +42,10 @@ Here’s a detailed **step-by-step plan** to overhaul your chatbot application, 
 2. **Authentication**:
 
    - Implement JWT-based authentication for the dashboard.
-   - Create login and user management APIs:
+   - Create user signup and login APIs:
      - `POST /api/user/login`
      - `POST /api/user/signup`
-     - `POST /api/user/logout`
+     - `GET /api/user/profile`
 
 3. **Assistant Management**:
 
